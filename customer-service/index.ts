@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import express, { Express, Request, Response } from "express";
+import { uuid } from "uuidv4";
 import { Countries } from "./repositories/Countries";
 import Customers from "./repositories/Customers";
 import { isValidishEmail } from "./validations/email";
@@ -45,9 +46,34 @@ app.post("/customers", async (req: Request, res: Response) => {
   if (Customers.getByEmail(email)) {
     return res.status(400).json({ type: "EmailAlreadyInUse" });
   }
+
   // TODO Last name
+  const lastName: string | undefined = req.body.lastName;
+
+  if (!lastName) {
+    return res.status(400).json({ type: "MissingLastName" });
+  }
+  if (!containsOnlyLatinCharacters(givenNames)) {
+    return res.status(400).json({ type: "InvalidLastName" });
+  }
+
 
   // TODO Country Code
+  const countryCode = req.body.countryCode;
+
+  if (!countryCode) {
+    return res.status(400).json({ type: "MissingCuntryCode" });
+  }
+
+  const country = Countries.find((item) => item.code === countryCode);
+
+  if (!country) {
+    return res.status(400).json({ type: "UnknownCountry" });
+  }
+
+  if (!country.isSupported) {
+    return res.status(400).json({ type: "CountryNotSupported" });
+  }
 
   const password = req.body.password;
 
@@ -61,14 +87,37 @@ app.post("/customers", async (req: Request, res: Response) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const customerId = uuid();
+
   // Customers.add({});
+  const newCustomer = Customers.add({
+    id: customerId,
+    givenNames,
+    lastName,
+    email,
+    password: hashedPassword,
+    countryCode,
+  });
 
   res.json({
     emai: "a;akljsdlkajsdlkj",
   });
 });
 
-app.post("/login", (req: Request, res: Response) => {});
+app.post("/login", async (req: Request, res: Response) => {
+  const customer = Customers.getByEmail(req.body.email);
+  if(!customer)
+  {
+    return res.status(400).json({type: "NoSuchEmail"})
+  }
+  const passwordFromCustomer = customer.password;
+  const rawPassword = req.body.password;
+  const arePasswordsTheSame = await bcrypt.compare(rawPassword, passwordFromCustomer);
+  if(!arePasswordsTheSame)
+  {
+    return res.status(401).json({type: "IncorrectPassword"});
+  }
+});
 
 app.listen(port, () => {
   console.log(

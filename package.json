@@ -14,5 +14,9 @@
     "frontend",
     "customer-service"
   ],
-  "private": true
+  "private": true,
+  "dependencies": {
+    "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13"
+  }
 }
