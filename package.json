@@ -16,6 +16,10 @@
   ],
   "private": true,
   "dependencies": {
+    "@types/express-session": "^1.17.7",
+    "express-session": "^1.17.3",
+    "npx": "^3.0.0",
+    "react-native": "0.71.3",
     "uuid": "^9.0.0",
     "uuidv4": "^6.2.13"
   }

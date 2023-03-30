@@ -1,7 +1,24 @@
+import fs from "fs";
+
 class Customers {
   private customers: CustomerT[] = [];
 
-  init() {}
+  async init() {
+    try
+    {
+      const rawCustomers = fs.readFileSync("./fake-db/customers-db.json", "utf-8");
+
+      this.customers = JSON.parse(rawCustomers);
+
+      console.log("Loaded customers", this.customers);
+
+    }
+    catch(err){
+      console.log(err);
+      this.customers = [];
+    }
+
+  }
 
   getAll(): CustomerT[] {
     return this.customers;
@@ -21,6 +38,9 @@ class Customers {
     }
 
     this.customers.push(customer);
+
+    fs.writeFileSync("./fake-db/customers-db.json", JSON.stringify(this.customers))
+
 
     return customer;
   }

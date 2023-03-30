@@ -5,19 +5,43 @@ import { Countries } from "./repositories/Countries";
 import Customers from "./repositories/Customers";
 import { isValidishEmail } from "./validations/email";
 import { containsOnlyLatinCharacters } from "./validations/names";
+import session from 'express-session';
 
 const app: Express = express();
 const port = 8081;
 
+Customers.init();
+
+const sessionConfig = {
+  secret: "I_love_gym",
+  saveUnitialized: true,
+} 
+
+declare module "express-session"
+{
+  interface SessionData
+  {
+    isAuthenticated: boolean; 
+  }
+}
+
 app.use(express.json());
+app.use(session(sessionConfig));
 
 app.get("/", (req: Request, res: Response) => {
   res.header("Location", "https://http.cat/400").send(":|");
 });
 
 app.get("/countries", (req: Request, res: Response) => {
+
+  if(!req.session.isAuthenticated)
+  {
+    return res.status(401).json({type : "NotAuthenticated"});
+  }
   res.json(Countries);
 });
+
+
 
 app.post("/customers", async (req: Request, res: Response) => {
   if (!req.body) {
@@ -89,7 +113,7 @@ app.post("/customers", async (req: Request, res: Response) => {
 
   const customerId = uuid();
 
-  // Customers.add({});
+ 
   const newCustomer = Customers.add({
     id: customerId,
     givenNames,
@@ -99,9 +123,10 @@ app.post("/customers", async (req: Request, res: Response) => {
     countryCode,
   });
 
-  res.json({
-    emai: "a;akljsdlkajsdlkj",
-  });
+  req.session.isAuthenticated = true;
+
+  res.json(newCustomer);
+  
 });
 
 app.post("/login", async (req: Request, res: Response) => {
