@@ -2,15 +2,15 @@ import bcrypt from "bcrypt";
 import express, { Express, Request, Response } from "express";
 import { uuid } from "uuidv4";
 import { Countries } from "./repositories/Countries";
-import Customers from "./repositories/Customers";
+import CustomerFileRepository from "./repositories/Customers";
 import { isValidishEmail } from "./validations/email";
 import { containsOnlyLatinCharacters } from "./validations/names";
 import session from 'express-session';
 
 const app: Express = express();
 const port = 8081;
-
-Customers.init();
+//change the things that need changing because of CustomerFileRepository
+CustomerFileRepository.init();
 
 const sessionConfig = {
   secret: "I_love_gym",
@@ -66,8 +66,9 @@ app.post("/customers", async (req: Request, res: Response) => {
   if (!isValidishEmail(email)) {
     return res.status(400).json({ type: "InvalidEmail" });
   }
-
-  if (Customers.getByEmail(email)) {
+   
+  const customerEmail = await CustomerFileRepository.findByEmail(email) 
+  if (customerEmail) {
     return res.status(400).json({ type: "EmailAlreadyInUse" });
   }
 
@@ -114,7 +115,7 @@ app.post("/customers", async (req: Request, res: Response) => {
   const customerId = uuid();
 
  
-  const newCustomer = Customers.add({
+  const newCustomer = await CustomerFileRepository.add({
     id: customerId,
     givenNames,
     lastName,
@@ -125,12 +126,17 @@ app.post("/customers", async (req: Request, res: Response) => {
 
   req.session.isAuthenticated = true;
 
-  res.json(newCustomer);
+  res.json({
+    id: newCustomer.id,
+    email: newCustomer.email,
+    countryCode: newCustomer.countryCode,
+  });
   
 });
 
 app.post("/login", async (req: Request, res: Response) => {
-  const customer = Customers.getByEmail(req.body.email);
+  
+  const customer = await CustomerFileRepository.findByEmail(req.body.email);
   if(!customer)
   {
     return res.status(400).json({type: "NoSuchEmail"})
@@ -138,9 +144,15 @@ app.post("/login", async (req: Request, res: Response) => {
   const passwordFromCustomer = customer.password;
   const rawPassword = req.body.password;
   const arePasswordsTheSame = await bcrypt.compare(rawPassword, passwordFromCustomer);
+
+  req.session.isAuthenticated = true;
+  
   if(!arePasswordsTheSame)
   {
     return res.status(401).json({type: "IncorrectPassword"});
+  }
+  else{
+    return res.status(200).json({type: "Your have logged in successfully"});
   }
 });
 

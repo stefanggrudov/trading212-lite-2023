@@ -1,9 +1,1 @@
-{
-    {
-        "givenNames" : "Stefan",
-        "lastName" : "Grudov",
-        "countryCode" : "BG",
-        "password": "whotfcares",
-        "email" : "stefanggrudov@gmail.com"
-    }
-}
+[{"id":"738be374-fe40-409b-a546-ee45d716bced","givenNames":"Stefan","lastName":"Grudov","email":"stefanggrudov@gmail.com","password":"$2b$10$SP.VsCo.Cu38zmPPa/8reuE2sh5eSTx4JODlw8z/MX2D9dlUO0ZLm","countryCode":"BG"},{"id":"ea149bf8-75ef-42c7-99c4-1e0f1acd4705","givenNames":"Stefan","lastName":"Grudov","email":"stefangrudov@gmail.com","password":"$2b$10$WQU0wPRQV6zh41lBvSA9sOlJd3fxDGht22jDe0eKfpR4MKBQ4WHhy","countryCode":"BG"},{"id":"ee07a7ea-16af-4e66-abda-d651d5ba52a4","givenNames":"Stefan","lastName":"Grudov","email":"Stefangrudov@gmail.com","password":"$2b$10$ptLd/3rp3kh0IJWxI1KMw.Di2LKx1FqMiiEdtB7K1TQqYaiHRjbju","countryCode":"BG"},{"id":"34e66933-e708-4d4b-ae45-528cc5846aed","givenNames":"Stefan","lastName":"Grudov","email":"STefangrudov@gmail.com","password":"$2b$10$52XSkRBZ47cQS52VWFB1zOSnKNb6Zq3zKUadcMOqvzGJRm6uV2c6W","countryCode":"BG"}]

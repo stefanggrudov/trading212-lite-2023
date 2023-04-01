@@ -1,6 +1,6 @@
 import fs from "fs";
 
-class Customers {
+class CustomerFileRepository implements CustomerRepository {
   private customers: CustomerT[] = [];
 
   async init() {
@@ -17,33 +17,47 @@ class Customers {
       console.log(err);
       this.customers = [];
     }
-
   }
 
-  getAll(): CustomerT[] {
-    return this.customers;
+  fetchAll(): Promise<CustomerT[]> {
+    return Promise.resolve(this.customers);
+  }
+  findByEmail(email: string): Promise<CustomerT | undefined>{
+    return Promise.resolve(this.customers.find((customer) => customer.email === email));
   }
 
-  getByEmail(email: string): CustomerT | undefined {
-    return this.customers.find((customer) => customer.email === email);
+  findById(id: string): Promise<CustomerT | undefined>{
+    return Promise.resolve(this.customers.find((customer) => customer.id === id));
   }
 
-  getById(id: string): CustomerT | undefined {
-    return this.customers.find((customer) => customer.id === id);
-  }
-
-  add(customer: CustomerT): CustomerT {
-    if (this.getById(customer.id)) {
+  async add(newCustomer:CustomerT): Promise<CustomerT>{
+    const customer = await(this.findById(newCustomer.id));
+    if (customer) {
       throw new Error(`Existing customer ID ${customer.id}`);
     }
 
-    this.customers.push(customer);
+    this.customers.push(newCustomer);
 
     fs.writeFileSync("./fake-db/customers-db.json", JSON.stringify(this.customers))
 
 
-    return customer;
+    return newCustomer;
   }
+
+  
 }
 
-export default new Customers();
+export default new CustomerFileRepository();
+
+
+interface CustomerRepository{
+  init(): Promise<void>;
+
+  fetchAll(): Promise<CustomerT[]>;
+
+  findByEmail(email: string): Promise<CustomerT | undefined>;
+
+  findById(id: string): Promise<CustomerT | undefined>;
+
+  add(customer:CustomerT): Promise<CustomerT>;
+}
