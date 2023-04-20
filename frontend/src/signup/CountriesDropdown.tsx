@@ -13,7 +13,9 @@ export function CountriesDropdown(props: {
         setIsCountriesListVisible(!isCountriesListVisible)
     }, [isCountriesListVisible])
 
-    const onCountryPress = useCallback(() => { }, [])
+    const onCountryPress = useCallback(() => { 
+        //TODO manage country press
+    }, [])
 
     const countryItemStyle = useMemo(():StyleProp<ViewStyle> => ({
         borderWidth : 1,
