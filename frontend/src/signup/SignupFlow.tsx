@@ -1,21 +1,69 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, TextInput, Pressable, Button } from "react-native";
-import { SignupFlowConfig } from "./SignupFlowTS";
+import { SignupFlowConfig } from "./SignupFlowT";
+import { EpicTextInput } from "./EpicTextInput";
+import { CountriesDropdown } from "./CountriesDropdown";
+import { CountryT } from "./Country";
+import { AppConfig } from "../config";
 
 function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
+
+
+    const [countries, setCountries] = useState([])
+
+    const fetchCountries = useCallback(async() => {
+
+        const responce = await fetch(`${AppConfig.CUSTOMER_SERVICE_URL}/countries`)
+
+        const countries = await responce.json() 
+
+        setCountries(countries)
+    }, [])
+
+    useEffect(() => {
+        fetchCountries()
+    }, [])
 
     const onPress = useCallback(() => {
         props.onNextPress()
     }, [])
 
+    const [firstName, setFirstName] = useState("");
+    const [givenName, setGivenName] = useState("")
+
     return (
         <View>
-            <Text>Country</Text>
-            <Text>First name</Text>
-            <Text>Given names</Text>
+            <CountriesDropdown countries={countries} />
+
+            <EpicTextInput
+                label="First Name"
+                onChangeText={(text) => {
+                    setFirstName(text)
+                }}
+                textInputProps={{
+                    textContentType: "name",
+                    autoCapitalize: "words"
+                }}
+                style={{
+                    marginVertical: 20,
+                }}
+            />
+
+            <EpicTextInput
+                label="Given Name"
+                onChangeText={(text) => {
+                    setGivenName(text)
+                }}
+                textInputProps={{
+                    textContentType: "givenName",
+                    autoCapitalize: "words"
+                }}
+                style={{
+                    marginBottom: 20
+                }}
+            />
 
             <Button title="Next" onPress={onPress} />
-
         </View>
     )
 }
@@ -43,7 +91,7 @@ function SignupFlowStepLoginDetails(props: { onNextPress: () => void }) {
                 placeholder="Repeat Password"
             />
 
-            <Button title="Next" onPress={onPress} />
+            <Button title="Sign up" onPress={onPress} />
 
         </View>
     )
@@ -52,7 +100,6 @@ function SignupFlowStepLoginDetails(props: { onNextPress: () => void }) {
 
 export function SignupFlow() {
     const [currentStep, setCurrentStep] = useState(0);
-
     const onNextPress = useCallback(() => {
         const newStep = currentStep + 1;
 
@@ -66,7 +113,7 @@ export function SignupFlow() {
     return (
         <View>
             {currentStep === 0 ? <SignupFlowStepCustomerDetails onNextPress={onNextPress} /> : null}
-            {currentStep === 1 ? <SignupFlowStepLoginDetails onNextPress={onNextPress}/> : null}
+            {currentStep === 1 ? <SignupFlowStepLoginDetails onNextPress={onNextPress} /> : null}
         </View>
 
     )

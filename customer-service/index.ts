@@ -34,11 +34,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.get("/countries", (req: Request, res: Response) => {
 
-  if(!req.session.isAuthenticated)
-  {
-    return res.status(401).json({type : "NotAuthenticated"});
-  }
-  res.json(Countries);
+  
+  res.header("Access-Control-Allow-Origin", "*").json(Countries);
 });
 
 
