@@ -3,8 +3,9 @@ import { View, Text, TextInput, Pressable, Button } from "react-native";
 import { SignupFlowConfig } from "./SignupFlowT";
 import { EpicTextInput } from "./EpicTextInput";
 import { CountriesDropdown } from "./CountriesDropdown";
-import { CountryT } from "./Country";
+import { CountryT } from "customer-commons";
 import { AppConfig } from "../config";
+import { EpicButton } from "./EpicButton";
 
 function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
 
@@ -63,7 +64,11 @@ function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
                 }}
             />
 
-            <Button title="Next" onPress={onPress} />
+            <EpicButton
+                label = "Next"
+                onPress = {onPress}
+                
+            />
         </View>
     )
 }
