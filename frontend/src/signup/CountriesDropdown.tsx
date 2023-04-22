@@ -1,6 +1,7 @@
 import { Pressable, View, Text, FlatList, Modal, ListRenderItem, ListRenderItemInfo, StyleProp, ViewStyle, Animated } from "react-native"
 import { CountryT } from "customer-commons"
 import { useCallback, useMemo, useRef, useState } from "react"
+import { SeparationLine } from "./SeparationLine"
 
 
 export function CountriesDropdown(props: {
@@ -53,9 +54,10 @@ export function CountriesDropdown(props: {
                 style={[
                     countryContainerStyle,
                     {
-                        opacity: drodownFadeAnimationValue
+                        opacity: drodownFadeAnimationValue,
+                        marginTop: 70
 
-                    }
+                    },
                 ]}>
                 <FlatList data={props.countries}
                     renderItem={renderCountryItem}
@@ -70,14 +72,24 @@ export function CountriesDropdown(props: {
         zIndex: isCountriesListVisible ? 1 : 0
     }), [isCountriesListVisible])
 
+    const labelStyle = useMemo(()=>({
+        color: "#747980",
+        fontSize: 12,
+        marginTop: 50
+    }), [])
+
     return (
         <View style={moveViewForwardStyle}>
-            <Pressable onPress={onPress}>
-                <Text>Select country</Text>
+            <Text style={labelStyle}>
+                COUNTRY OF RESIDENCE
+            </Text>
+            <Pressable onPress={onPress} >
+                <Text style={{fontSize: 17}}>Select country</Text>
             </Pressable>
 
             {renderListPerchance()}
 
+            <SeparationLine/>
         </View>
 
     )

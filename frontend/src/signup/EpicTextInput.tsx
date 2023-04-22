@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StyleProp, ViewStyle, TextInput, View, Text, StyleSheet, Animated, Easing } from "react-native"
+import { SeparationLine } from "./SeparationLine";
 
 const EpicTextInputHeight = 70;
 const TextInputStyleHeight = 35;
@@ -10,16 +11,16 @@ export function EpicTextInput(props: {
     style?: StyleProp<ViewStyle>
     textInputProps?: Omit<React.ComponentProps<typeof TextInput>, "onChangeText">
 }) {
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         cancelAnimation.current
     }, [])
 
-    const cancelAnimation = useRef<(()=>void) | undefined>(undefined)
+    const cancelAnimation = useRef<(() => void) | undefined>(undefined)
 
     const containerStyle = useMemo(
         (): StyleProp<ViewStyle> => [
-            { height: EpicTextInputHeight, justifyContent: "flex-end" },
+            { height: EpicTextInputHeight, justifyContent: "flex-end"},
             props.style
         ],
         []
@@ -57,7 +58,7 @@ export function EpicTextInput(props: {
             duration: 150,
             useNativeDriver: true
         })
-
+        
         animation.start()
 
         cancelAnimation.current = animation.stop
@@ -70,10 +71,14 @@ export function EpicTextInput(props: {
         })
     }), [])
 
+    const labelStyle = useMemo(() => ({
+        color: "#747980",
+    }), [])
+
     return (
         <View style={containerStyle}>
             <Animated.View style={animatedStyle}>
-                <Text>{props.label}</Text>
+                <Text style={labelStyle}>{props.label}</Text>
             </Animated.View>
             <TextInput
                 onFocus={onFocus}
@@ -82,7 +87,7 @@ export function EpicTextInput(props: {
                 onChangeText={props.onChangeText}
                 {...props.textInputProps}
             />
-            <View style={{ backgroundColor: "#747980", height: StyleSheet.hairlineWidth }} />
+            <SeparationLine />
         </View >
     )
 }

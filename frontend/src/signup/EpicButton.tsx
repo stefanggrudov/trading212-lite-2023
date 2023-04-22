@@ -11,17 +11,20 @@ export function EpicButton(props: {
         container: {
             flex: 1,
             justifyContent: 'center',
-            alignItems: 'center',
         },
         button: {
-            backgroundColor: 'blue',
+            backgroundColor: '#00A7E1',
             borderRadius: 8,
             padding: 16,
+
+            //TODO chnge color and size of the button
         },
         buttonText: {
             color: 'white',
             textAlign: 'center',
             fontWeight: 'bold',
+            fontSize: 16
+            
         },
     });
 

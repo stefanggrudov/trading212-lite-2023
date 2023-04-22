@@ -1,22 +1,23 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, Button } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View, Text, TextInput, Pressable, Button, StyleProp, ViewStyle } from "react-native";
 import { SignupFlowConfig } from "./SignupFlowT";
 import { EpicTextInput } from "./EpicTextInput";
 import { CountriesDropdown } from "./CountriesDropdown";
 import { CountryT } from "customer-commons";
 import { AppConfig } from "../config";
 import { EpicButton } from "./EpicButton";
+import { Title } from "./Title";
 
 function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
 
 
     const [countries, setCountries] = useState([])
 
-    const fetchCountries = useCallback(async() => {
+    const fetchCountries = useCallback(async () => {
 
         const responce = await fetch(`${AppConfig.CUSTOMER_SERVICE_URL}/countries`)
 
-        const countries = await responce.json() 
+        const countries = await responce.json()
 
         setCountries(countries)
     }, [])
@@ -32,8 +33,19 @@ function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
     const [firstName, setFirstName] = useState("");
     const [givenName, setGivenName] = useState("")
 
+    const containerStyle = useMemo(() => ({
+        width: 300,
+        backgroundColor: "white",
+        borderRadius: 10,
+        top: 40,
+
+
+    }), [])
+
     return (
-        <View>
+        <View style={containerStyle}>
+            <Title lable="Sign up" />
+
             <CountriesDropdown countries={countries} />
 
             <EpicTextInput
@@ -65,9 +77,9 @@ function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
             />
 
             <EpicButton
-                label = "Next"
-                onPress = {onPress}
-                
+                label="Next"
+                onPress={onPress}
+
             />
         </View>
     )
@@ -79,24 +91,74 @@ function SignupFlowStepLoginDetails(props: { onNextPress: () => void }) {
         props.onNextPress()
     }, [])
 
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+
+    const containerStyle = useMemo(() => ({
+        width: 300,
+        backgroundColor: "white",
+        borderRadius: 10,
+        top: 40,
+
+
+    }), [])
+
     return (
-        <View>
-            <TextInput
-                textContentType="emailAddress"
-                placeholder="Email"
+        <View style={containerStyle}>
+            <Title lable="Login details" />
+
+            <EpicTextInput
+                label="Email"
+                onChangeText={(text) => {
+                    setEmail(text)
+                }}
+                textInputProps={{
+                    textContentType: "emailAddress",
+                    autoCapitalize: "none"
+                }}
+                style={{
+                    marginVertical: 20,
+                }}
             />
 
-            <TextInput
-                textContentType="password"
-                placeholder="Password"
+            <EpicTextInput
+                label="Password"
+                onChangeText={(text) => {
+                    setPassword(text)
+                }}
+                textInputProps={{
+                    textContentType: "password",
+                    secureTextEntry: true,
+                    autoCapitalize: "none"
+                }}
+                style={{
+                    marginVertical: 20,
+                }}
             />
 
-            <TextInput
-                textContentType="password"
-                placeholder="Repeat Password"
+            <EpicTextInput
+                label="Repeat Password"
+                onChangeText={(text) => {
+                    setConfirmPassword(text)
+                }}
+                textInputProps={{
+                    textContentType: "password",
+                    secureTextEntry: true,
+                    autoCapitalize: "none"
+                }}
+                style={{
+                    marginVertical: 20,
+                }}
             />
 
-            <Button title="Sign up" onPress={onPress} />
+            <EpicButton
+                label="Sign Up"
+                onPress={onPress}
+
+            />
+
+
 
         </View>
     )
