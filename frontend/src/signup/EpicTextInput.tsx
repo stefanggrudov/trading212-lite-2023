@@ -1,93 +1,104 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { StyleProp, ViewStyle, TextInput, View, Text, StyleSheet, Animated, Easing } from "react-native"
-import { SeparationLine } from "./SeparationLine";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import {
+  Animated,
+  StyleProp,
+  Text,
+  TextInput,
+  View,
+  ViewStyle,
+} from "react-native"
+import { SeparationLine } from "./SeparationLine"
 
-const EpicTextInputHeight = 70;
-const TextInputStyleHeight = 35;
+const EpicTextInputHeight = 70
+const TextInputStyleHeight = 35
 
 export function EpicTextInput(props: {
-    label: string,
-    onChangeText: (text: string) => void
-    style?: StyleProp<ViewStyle>
-    textInputProps?: Omit<React.ComponentProps<typeof TextInput>, "onChangeText">
+  label: string
+  onChangeText: (text: string) => void
+  style?: StyleProp<ViewStyle>
+  textInputProps?: Omit<React.ComponentProps<typeof TextInput>, "onChangeText">
 }) {
+  useEffect(() => {
+    cancelAnimation.current
+  }, [])
 
-    useEffect(() => {
-        cancelAnimation.current
-    }, [])
+  const cancelAnimation = useRef<(() => void) | undefined>(undefined)
 
-    const cancelAnimation = useRef<(() => void) | undefined>(undefined)
+  const containerStyle = useMemo(
+    (): StyleProp<ViewStyle> => [
+      { height: EpicTextInputHeight, justifyContent: "flex-end" },
+      props.style,
+    ],
+    []
+  )
 
-    const containerStyle = useMemo(
-        (): StyleProp<ViewStyle> => [
-            { height: EpicTextInputHeight, justifyContent: "flex-end"},
-            props.style
-        ],
-        []
-    )
+  const textInputStyle = useMemo(
+    () => ({
+      height: TextInputStyleHeight,
+      outlineStyle: "none",
+    }),
+    []
+  )
 
-    const textInputStyle = useMemo(
-        () => ({
-            height: TextInputStyleHeight,
-            outlineStyle: 'none',
-        }),
-        []
-    )
+  const [isFocused, setIsFocused] = useState(false)
+  const labelOffsetAnimation = useRef(new Animated.Value(0)).current
 
-    const [isFocused, setIsFocused] = useState(false);
-    const labelOffsetAnimation = useRef(new Animated.Value(0)).current
+  const onFocus = useCallback(() => {
+    setIsFocused(true)
 
-    const onFocus = useCallback(() => {
-        setIsFocused(true)
+    const animation = Animated.timing(labelOffsetAnimation, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: true,
+    })
+    animation.start()
+    cancelAnimation.current = animation.stop
+  }, [])
 
-        const animation = Animated.timing(labelOffsetAnimation, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true
-        })
-        animation.start()
-        cancelAnimation.current = animation.stop
+  const onBlur = useCallback(() => {
+    setIsFocused(false)
 
-    }, []);
+    const animation = Animated.timing(labelOffsetAnimation, {
+      toValue: 0,
+      duration: 150,
+      useNativeDriver: true,
+    })
 
-    const onBlur = useCallback(() => {
-        setIsFocused(false)
+    animation.start()
 
-        const animation = Animated.timing(labelOffsetAnimation, {
-            toValue: 0,
-            duration: 150,
-            useNativeDriver: true
-        })
-        
-        animation.start()
+    cancelAnimation.current = animation.stop
+  }, [])
 
-        cancelAnimation.current = animation.stop
-    }, [])
+  const animatedStyle = useMemo(
+    () => ({
+      marginBottom: labelOffsetAnimation.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-25, 0],
+      }),
+    }),
+    []
+  )
 
-    const animatedStyle = useMemo(() => ({
-        marginBottom: labelOffsetAnimation.interpolate({
-            inputRange: [0, 1],
-            outputRange: [-25, 0],
-        })
-    }), [])
+  const labelStyle = useMemo(
+    () => ({
+      color: "#747980",
+    }),
+    []
+  )
 
-    const labelStyle = useMemo(() => ({
-        color: "#747980",
-    }), [])
-
-    return (
-        <View style={containerStyle}>
-            <Animated.View style={animatedStyle}>
-                <Text style={labelStyle}>{props.label}</Text>
-            </Animated.View>
-            <TextInput
-                onFocus={onFocus}
-                onBlur={onBlur}
-                style={textInputStyle}
-                onChangeText={props.onChangeText}
-                {...props.textInputProps}
-            />
-            <SeparationLine />
-        </View >
-    )
+  return (
+    <View style={containerStyle}>
+      <Animated.View style={animatedStyle}>
+        <Text style={labelStyle}>{props.label}</Text>
+      </Animated.View>
+      <TextInput
+        onFocus={onFocus}
+        onBlur={onBlur}
+        style={textInputStyle}
+        onChangeText={props.onChangeText}
+        {...props.textInputProps}
+      />
+      <SeparationLine />
+    </View>
+  )
 }
