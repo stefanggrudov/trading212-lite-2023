@@ -16,6 +16,11 @@ export function EpicButton(props: {
     container: {
       flex: 1,
       justifyContent: "center",
+      width: 350,
+      height: 60,
+      left: 20,
+      bottom: 20,
+      marginTop: 30,
     },
     button: {
       backgroundColor: "#00A7E1",

@@ -31,17 +31,18 @@ function SignupFlowStepCustomerDetails(props: { onNextPress: () => void }) {
 
   const containerStyle = useMemo(
     () => ({
-      width: 300,
+      width: 390,
+      height: 450,
       backgroundColor: "white",
       borderRadius: 10,
-      top: 40,
+      top: 90,
     }),
     []
   )
 
   return (
     <View style={containerStyle}>
-      <Title lable="Sign up" />
+      <Title lable="Sign up" style={{ left: 135 }} />
 
       <CountriesDropdown countries={countries} />
 
@@ -89,17 +90,18 @@ function SignupFlowStepLoginDetails(props: { onNextPress: () => void }) {
 
   const containerStyle = useMemo(
     () => ({
-      width: 300,
+      width: 390,
+      height: 450,
       backgroundColor: "white",
       borderRadius: 10,
-      top: 40,
+      top: 90,
     }),
     []
   )
 
   return (
     <View style={containerStyle}>
-      <Title lable="Login details" />
+      <Title lable="Login details" style={{ left: 95 }} />
 
       <EpicTextInput
         label="Email"

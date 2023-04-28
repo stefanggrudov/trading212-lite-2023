@@ -49,7 +49,9 @@ export function CountriesDropdown(props: { countries: CountryT[] }) {
       marginLeft: 5,
       position: "absolute",
       borderRadius: 10,
+      width: 200,
       backgroundColor: "red",
+      marginBottom: 0,
     }),
     []
   )
@@ -104,6 +106,7 @@ export function CountriesDropdown(props: { countries: CountryT[] }) {
       left: 0,
       right: 0,
       top: 20,
+      marginLeft: 20,
       backgroundColor: "white",
     }),
     []
@@ -127,11 +130,15 @@ export function CountriesDropdown(props: { countries: CountryT[] }) {
         />
       </Animated.View>
     )
-  }, [props.countries, isCountriesListVisible, textColor, pressed])
+  }, [props.countries, isCountriesListVisible, textColor, pressed, hovered])
 
   const moveViewForwardStyle = useMemo(
     () => ({
       zIndex: isCountriesListVisible ? 1 : 0,
+      width: 390,
+      height: "hug",
+      radius: 10,
+      marginTop: 30,
     }),
     [isCountriesListVisible]
   )
@@ -141,6 +148,7 @@ export function CountriesDropdown(props: { countries: CountryT[] }) {
       color: "#747980",
       fontSize: 12,
       marginTop: 50,
+      marginLeft: 20,
     }),
     []
   )
@@ -149,7 +157,7 @@ export function CountriesDropdown(props: { countries: CountryT[] }) {
     <View style={moveViewForwardStyle}>
       <Text style={labelStyle}>COUNTRY OF RESIDENCE</Text>
       <Pressable onPress={onPress}>
-        <Text style={{ fontSize: 17 }}>Select country</Text>
+        <Text style={{ fontSize: 17, marginLeft: 20 }}>Select country</Text>
       </Pressable>
 
       {renderListPerchance()}

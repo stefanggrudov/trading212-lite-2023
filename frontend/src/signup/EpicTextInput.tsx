@@ -26,7 +26,11 @@ export function EpicTextInput(props: {
 
   const containerStyle = useMemo(
     (): StyleProp<ViewStyle> => [
-      { height: EpicTextInputHeight, justifyContent: "flex-end" },
+      {
+        height: EpicTextInputHeight,
+        justifyContent: "flex-end",
+        marginTop: 0,
+      },
       props.style,
     ],
     []
@@ -36,6 +40,10 @@ export function EpicTextInput(props: {
     () => ({
       height: TextInputStyleHeight,
       outlineStyle: "none",
+      marginLeft: 20,
+      width: 350,
+      hight: 19,
+      top: 35,
     }),
     []
   )
@@ -82,6 +90,7 @@ export function EpicTextInput(props: {
   const labelStyle = useMemo(
     () => ({
       color: "#747980",
+      marginLeft: 20,
     }),
     []
   )
